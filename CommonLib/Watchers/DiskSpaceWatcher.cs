@@ -24,31 +24,8 @@ public class DiskSpaceWatcher : BackgroundService
     }
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        while (!stoppingToken.IsCancellationRequested)
-        {
-            try
-            {
-                var diskInfo = _diskInfoFactory.Create();
-
-                var freeSpace = diskInfo.AvailableFreeSpace;
-                var toGiga = Math.Pow(1024, 3);
-                var freeSpaceInGiGa = freeSpace / toGiga;
-
-                if (freeSpace / toGiga <= 5)
-                    _systemEventNotifier.OnNewSystemEvent(new NoFreeSpaceEvent("Нет места на диске"));
-
-                await Task.Delay(TimeSpan.FromSeconds(1), stoppingToken);
-            }
-            catch (OperationCanceledException)
-            {
-                _logger.LogDebug("DiskSpaceWatcher.Cancelled");
-                break;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"DiskSpaceWatcher: {ex.Message}");
-            }
-        }
+        //TODO:
+        await Task.CompletedTask;
     }
 }
 

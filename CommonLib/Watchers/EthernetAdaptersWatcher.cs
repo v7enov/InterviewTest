@@ -25,30 +25,7 @@ public class EthernetAdaptersWatcher : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        while (!stoppingToken.IsCancellationRequested)
-        {
-            try
-            {
-                var interfaces = _networkAdapterFactory.Create();
-
-                if (interfaces.Any(i =>
-                i.InterfaceType == NetworkInterfaceType.Ethernet &&
-                i.OperationalStatus != OperationalStatus.Up))
-                {
-                    _systemEventNotifier.OnNewSystemEvent(new EthernetAdapterDownEvent("Не работает какой-то ETH адаптер"));
-                }
-
-                await Task.Delay(TimeSpan.FromSeconds(1), stoppingToken);
-            }
-            catch (OperationCanceledException)
-            {
-                _logger.LogDebug("EthernetAdaptersWatcher.Cancelled");
-                break;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"EthernetAdaptersWatcher: {ex.Message}");
-            }
-        }
+        //TODO:
+        await Task.CompletedTask;
     }
 }
