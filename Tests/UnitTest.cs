@@ -18,9 +18,12 @@ public class UnitTests
         var host = Setup();
         var diskEventArrived = false;
         var ethAdapterEventArrived = false;
-        var run = host.StartAsync();
+        var isDiskActuallyHasNoSpace = false;
+        var isEthernetAdapterActuallyDown = false;
 
+        var run = host.StartAsync();
         var notifier = host.Services.GetService<ISystemEventNotifier>();
+
         notifier.EventArrived += (sender, args) =>
         {
             switch (args.Type)
@@ -34,8 +37,18 @@ public class UnitTests
             }
         };
 
+        var diskInfoFactory = host.Services.GetRequiredService<IDiskInfoFactory>();
+        var diskInfo = diskInfoFactory.Create();
+        isDiskActuallyHasNoSpace = diskInfo.AvailableFreeSpace <= 5000000000;
+
+        var networkInterfacesFactory = host.Services.GetRequiredService<INetworkAdapterFactory>();
+        var networkInterfaces = networkInterfacesFactory.Create();
+        isEthernetAdapterActuallyDown = networkInterfaces.Any(i => 
+        i.InterfaceType == System.Net.NetworkInformation.NetworkInterfaceType.Ethernet 
+        && i.OperationalStatus != System.Net.NetworkInformation.OperationalStatus.Up);
+
         await Task.Delay(TimeSpan.FromSeconds(10));
-        Assert.IsTrue(diskEventArrived && ethAdapterEventArrived); 
+        Assert.IsTrue(diskEventArrived && ethAdapterEventArrived && isDiskActuallyHasNoSpace); 
     }
 
     [TestMethod]
