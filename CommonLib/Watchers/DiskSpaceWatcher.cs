@@ -13,7 +13,7 @@ public class DiskSpaceWatcher : BackgroundService
     private readonly IDiskInfoFactory _diskInfoFactory;
 
     public DiskSpaceWatcher(
-        ILogger<DiskSpaceWatcher> logger, 
+        ILogger<DiskSpaceWatcher> logger,
         ISystemEventNotifier systemEventNotifier,
         IDiskInfoFactory diskInfoFactory
         )
@@ -24,8 +24,17 @@ public class DiskSpaceWatcher : BackgroundService
     }
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        //TODO:
-        await Task.CompletedTask;
+        try
+        {
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                var diskInfo = _diskInfoFactory.Create();
+                if (diskInfo.AvailableFreeSpace < 1000)
+                    _systemEventNotifier.OnNewSystemEvent(new NoFreeSpaceEvent("ok"));
+                await Task.Delay(1000, stoppingToken);
+            }
+        }
+        catch (OperationCanceledException _) { }
     }
 }
 

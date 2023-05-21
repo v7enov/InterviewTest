@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace CommonLib.Models;
 
+//this looks like a real factory, producing the info with available space
 public class DiskInfo : IDiskInfo
 {
     private readonly DriveInfo _driveInfo;

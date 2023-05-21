@@ -25,7 +25,7 @@ public class EthernetAdaptersWatcher : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        //TODO:
+        _systemEventNotifier.OnNewSystemEvent(new EthernetAdapterDownEvent("ok"));
         await Task.CompletedTask;
     }
 }

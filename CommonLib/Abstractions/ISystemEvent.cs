@@ -2,6 +2,7 @@
 
 namespace CommonLib.Abstractions;
 
+//could be just a class
 public interface ISystemEvent
 {
     EventType Type { get; }
