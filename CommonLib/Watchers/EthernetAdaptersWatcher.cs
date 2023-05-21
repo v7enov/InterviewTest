@@ -1,5 +1,6 @@
 ﻿using CommonLib.Abstractions;
 using CommonLib.Events;
+using CommonLib.Models;
 using CommonLib.Models.Abstractions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -25,7 +26,19 @@ public class EthernetAdaptersWatcher : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _systemEventNotifier.OnNewSystemEvent(new EthernetAdapterDownEvent("ok"));
-        await Task.CompletedTask;
+        while (!stoppingToken.IsCancellationRequested)
+        {
+            try
+            {
+                var adapters = _networkAdapterFactory.GetNetworkAdapters();
+                
+                if (adapters.Any(a => a.InterfaceType == NetworkInterfaceType.Ethernet && a.OperationalStatus != OperationalStatus.Up))
+                    _systemEventNotifier.OnNewSystemEvent(new SystemEvent(EventType.EthernetAdapterDown, "Some ethernet adapter is currently down"));
+
+
+                await Task.Delay(TimeSpan.FromSeconds(1), stoppingToken);
+            }
+            catch (OperationCanceledException){}
+        }
     }
 }

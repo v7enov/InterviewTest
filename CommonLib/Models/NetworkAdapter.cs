@@ -1,18 +1,16 @@
-﻿using CommonLib.Models.Abstractions;
-using System.Net.NetworkInformation;
+﻿using System.Net.NetworkInformation;
 
 namespace CommonLib.Models;
 
-public class NetworkAdapter : INetworkAdapter
+public class NetworkAdapter 
 {
-    private readonly NetworkInterface _networkInterface;
+    public NetworkInterfaceType InterfaceType { get; init; }
 
-    public NetworkAdapter(NetworkInterface networkInterface)
+    public OperationalStatus OperationalStatus { get; init; }
+
+    public NetworkAdapter(NetworkInterfaceType networkInterfaceType, OperationalStatus operationalStatus)
     {
-        _networkInterface = networkInterface;
+        InterfaceType = networkInterfaceType;
+        OperationalStatus = operationalStatus;  
     }
-
-    public NetworkInterfaceType InterfaceType => _networkInterface.NetworkInterfaceType;
-
-    public OperationalStatus OperationalStatus => _networkInterface.OperationalStatus;
 }

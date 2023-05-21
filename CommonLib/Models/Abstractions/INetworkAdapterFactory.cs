@@ -2,5 +2,5 @@
 
 public interface INetworkAdapterFactory
 {
-    IEnumerable<INetworkAdapter> Create();
+    IEnumerable<NetworkAdapter> GetNetworkAdapters();
 }

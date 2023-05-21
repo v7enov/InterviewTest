@@ -4,15 +4,18 @@ namespace CommonLib.Models;
 
 public class DiskInfoFactory : IDiskInfoFactory
 {
-    private readonly string _mountPoint;
+    private readonly DriveInfo _driveInfo;
 
     public DiskInfoFactory(string mountPoint)
     {
-        _mountPoint = mountPoint;
+        _driveInfo = new DriveInfo(mountPoint);
     }
 
-    public IDiskInfo Create()
+    public DiskInfo GetDiskInfo()
     {
-        return new DiskInfo(_mountPoint);
+        return new DiskInfo() 
+        { 
+            AvailableFreeSpace = _driveInfo.AvailableFreeSpace,
+        };
     }
 }

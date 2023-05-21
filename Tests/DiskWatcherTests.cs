@@ -4,12 +4,11 @@ using CommonLib.Models.Abstractions;
 using CommonLib.Watchers;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Tests.Models.Abstractions;
 
 namespace Tests;
 
 [TestClass]
-public class WatcherTests
+public class DiskWatcherTests
 {
     [TestMethod]
     public async Task DiskSpaceWatcherShouldEmitNoFreeSpaceEvent()
@@ -28,7 +27,7 @@ public class WatcherTests
         };
 
         var diskInfoFactory = new Mock<IDiskInfoFactory>();
-        diskInfoFactory.SetupSequence(x => x.Create()).Returns(new DiskInfoMock { AvailableFreeSpace = 1_000_000_000L }).Returns(new DiskInfoMock { AvailableFreeSpace = 10 });
+        diskInfoFactory.SetupSequence(x => x.GetDiskInfo()).Returns(new DiskInfo { AvailableFreeSpace = 1_000_000_000L }).Returns(new DiskInfo { AvailableFreeSpace = 10 });
 
         var diskSpaceWatcher = new DiskSpaceWatcher(new LoggerFactory().CreateLogger<DiskSpaceWatcher>(), notifier, diskInfoFactory.Object);
         var cancellationTokenSource = new CancellationTokenSource();
@@ -55,12 +54,12 @@ public class WatcherTests
         };
 
         var diskInfoFactory = new Mock<IDiskInfoFactory>();
-        diskInfoFactory.SetupSequence(x => x.Create())
-            .Returns(new DiskInfoMock { AvailableFreeSpace = 1_000_000_000L })
-            .Returns(new DiskInfoMock { AvailableFreeSpace = 1_000_000_000L })
-            .Returns(new DiskInfoMock { AvailableFreeSpace = 1_000_000_000L })
-            .Returns(new DiskInfoMock { AvailableFreeSpace = 1_000_000_000L })
-            .Returns(new DiskInfoMock { AvailableFreeSpace = 10 });
+        diskInfoFactory.SetupSequence(x => x.GetDiskInfo())
+            .Returns(new DiskInfo { AvailableFreeSpace = 7368709120 })
+            .Returns(new DiskInfo { AvailableFreeSpace = 7368709120 })
+            .Returns(new DiskInfo { AvailableFreeSpace = 7368709120 })
+            .Returns(new DiskInfo { AvailableFreeSpace = 7368709120 })
+            .Returns(new DiskInfo { AvailableFreeSpace = 10 });
 
         var diskSpaceWatcher = new DiskSpaceWatcher(new LoggerFactory().CreateLogger<DiskSpaceWatcher>(), notifier, diskInfoFactory.Object);
         var cancellationTokenSource = new CancellationTokenSource();

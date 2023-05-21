@@ -8,26 +8,15 @@ public enum EventType
     EthernetAdapterDown
 }
 
-public class NoFreeSpaceEvent : ISystemEvent
+public class SystemEvent
 {
-    public EventType Type => EventType.NoFreeSpace;
+    public EventType Type { get; init; }
 
     public string EventDescription { get; init; }
 
-    public NoFreeSpaceEvent(string description)
+    public SystemEvent(EventType Type, string description)
     {
-        EventDescription = description;
-    }
-}
-
-public class EthernetAdapterDownEvent : ISystemEvent
-{
-    public EventType Type => EventType.EthernetAdapterDown;
-
-    public string EventDescription { get; init; }
-
-    public EthernetAdapterDownEvent(string description)
-    {
+        this.Type = Type;
         EventDescription = description;
     }
 }

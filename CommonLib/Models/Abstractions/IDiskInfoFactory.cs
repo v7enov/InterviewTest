@@ -2,5 +2,5 @@
 
 public interface IDiskInfoFactory
 {
-    IDiskInfo Create();
+    DiskInfo GetDiskInfo();
 }
