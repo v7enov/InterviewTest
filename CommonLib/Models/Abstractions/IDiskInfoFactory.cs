@@ -2,5 +2,5 @@
 
 public interface IDiskInfoFactory
 {
-    DiskInfo GetDiskInfo();
+    IAsyncEnumerable<DiskInfo> GetDiskInfoAsync(CancellationToken cancellationToken);
 }

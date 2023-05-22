@@ -26,12 +26,10 @@ public class DiskSpaceWatcher : BackgroundService
     {
         try
         {
-            while (!stoppingToken.IsCancellationRequested)
+            await foreach (var diskInfo in _diskInfoFactory.GetDiskInfoAsync(stoppingToken))
             {
-                var diskInfo = _diskInfoFactory.GetDiskInfo();
                 if (diskInfo.AvailableFreeSpace < 5 * 1 << 30)
                     _systemEventNotifier.OnNewSystemEvent(new SystemEvent(EventType.NoFreeSpace, "Disk has no free space"));
-                await Task.Delay(1000, stoppingToken);
             }
         }
         catch (OperationCanceledException) { }
