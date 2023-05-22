@@ -1,6 +1,8 @@
-﻿namespace CommonLib.Models.Abstractions;
+﻿using System.Runtime.CompilerServices;
+
+namespace CommonLib.Models.Abstractions;
 
 public interface INetworkAdapterFactory
 {
-    IEnumerable<NetworkAdapter> GetNetworkAdapters();
+    IAsyncEnumerable<IEnumerable<NetworkAdapter>> GetNetworkAdapters(CancellationToken cancellationToken);
 }

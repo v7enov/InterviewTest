@@ -26,19 +26,12 @@ public class EthernetAdaptersWatcher : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        while (!stoppingToken.IsCancellationRequested)
+        await foreach (var adapters in _networkAdapterFactory.GetNetworkAdapters(stoppingToken))
         {
-            try
+            if (adapters.Any(a => a.InterfaceType == NetworkInterfaceType.Ethernet && a.OperationalStatus != OperationalStatus.Up))
             {
-                var adapters = _networkAdapterFactory.GetNetworkAdapters();
-                
-                if (adapters.Any(a => a.InterfaceType == NetworkInterfaceType.Ethernet && a.OperationalStatus != OperationalStatus.Up))
-                    _systemEventNotifier.OnNewSystemEvent(new SystemEvent(EventType.EthernetAdapterDown, "Some ethernet adapter is currently down"));
-
-
-                await Task.Delay(TimeSpan.FromSeconds(1), stoppingToken);
+                _systemEventNotifier.OnNewSystemEvent(new SystemEvent(EventType.EthernetAdapterDown, "Some ethernet adapter is currently down"));
             }
-            catch (OperationCanceledException){}
         }
     }
 }
