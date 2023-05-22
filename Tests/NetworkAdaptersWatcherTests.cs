@@ -38,9 +38,7 @@ public class NetworkAdaptersWatcherTests
         };
 
         var networkAdapterFactoryMock = new Mock<INetworkAdapterFactory>();
-
         networkAdapterFactoryMock.Setup(x => x.GetNetworkAdapters(It.IsAny<CancellationToken>())).Returns(adaptersSequence);
-
         var ethernetAdaptersWatcher = new EthernetAdaptersWatcher(new LoggerFactory().CreateLogger<EthernetAdaptersWatcher>(),
             notifier,
             networkAdapterFactoryMock.Object);
